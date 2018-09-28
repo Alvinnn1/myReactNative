@@ -71,16 +71,18 @@ export default class App extends React.Component {
         <View>
           {this.state.hotelDetail.hotelID
             ?
-            <View style={{flex:1,flexDirection:'row'}}>
+            <View style={styles.titleBox}>
               <View stye={{width: px2dp(550)}}>
                 <Text style={styles.titleName} selectable={true}>{this.state.hotelDetail.nameChn || this.state.hotelDetail.nameEng}</Text>
                 <Text style={styles.titleNameEn}>{this.state.hotelDetail.nameEng}</Text>
                 {/*<Text style={styles.titleNameEn} numberOfLines={1} ellipsizeMode='tail'>testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest</Text>*/}
               </View>
-              <View stye={{width: px2dp(200)}}></View>
+              <View stye={{width: px2dp(200),height:px2dp(80),alignItems:'center',justifyContent:'center'}}>
+                <Text style={styles.scoreText}>{(Math.ceil(this.state.hotelDetail.score/20 * 10)/10).toFixed(1)}</Text>
+              </View>
             </View>
             :
-            <Text></Text>
+            null
 
           }
         </View>
@@ -116,6 +118,15 @@ const styles = StyleSheet.create({
     right:0,
     bottom:0
   },
+  titleBox:{
+    flex:1,
+    flexDirection:'row',
+    justifyContent:'space-between',
+    paddingTop: px2dp(45),
+    paddingRight: px2dp(30),
+    paddingBottom:px2dp(35),
+    paddingLeft: px2dp(30)
+    },
   titleName: {
     fontFamily: "PingFang SC",
     fontWeight: 'bold',
@@ -130,6 +141,11 @@ const styles = StyleSheet.create({
     lineHeight: px2dp(36),
     color: '#464646',
     marginBottom:px2dp(10)
+  },
+  scoreText: {
+    fontWeight:'bold',
+    fontSize: px2dp(46),
+    color: '#00bedc'
   },
   titleAddr: {
 
