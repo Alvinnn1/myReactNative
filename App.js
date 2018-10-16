@@ -14,6 +14,9 @@ import {
   Text,
   View
 } from 'react-native';
+import Iconfont from "./assets/Fonts/Iconfont";
+import Icon from 'react-native-vector-icons/FontAwesome';
+// const myIcon = (<Icon name="rocket" size={30} color="#900" />)
 import { getHotelDetail } from "./services/api";
 
 
@@ -56,6 +59,12 @@ export default class App extends React.Component {
           ?
           <View style={styles.imgBox}>
             <Image source={{uri:this.state.imageList[0].src}} style={{height:px2dp(340),flex:1}}/>
+            <Text style={{fontSize: 20,color:'black',fontFamily: 'Iconfont'}}>kaiguanguan:{Iconfont('kaiguanguan')}</Text>
+            {/*<Iconfont name={'map'}/>*/}
+            {/*<Iconfont name='attention'/>*/}
+            {/*<Text style={{fontSize: 20,color:'black',fontFamily: 'FontAwesome'}}>61525</Text>*/}
+            {/*<Text style={{fontSize: 20,color:'black',fontFamily: 'iconfont'}}>'&#xe705'</Text>*/}
+            {/*<Icon name='glass'/>*/}
             <View style={styles.rowBox}>
               <Image source={{uri:this.state.imageList[1].src}} style={{height:px2dp(160),flex:1,marginRight:px2dp(5)}}/>
               <Image source={{uri:this.state.imageList[2].src}} style={{height:px2dp(160),flex:1,marginRight:px2dp(5)}}/>
@@ -128,7 +137,7 @@ const styles = StyleSheet.create({
     paddingLeft: px2dp(30)
     },
   titleName: {
-    fontFamily: "PingFang SC",
+    // fontFamily: "PingFangSC-Regular",
     fontWeight: 'bold',
     fontSize: px2dp(40),
     lineHeight: px2dp(50),
@@ -136,7 +145,7 @@ const styles = StyleSheet.create({
     marginBottom:px2dp(10)
   },
   titleNameEn: {
-    fontFamily: "PingFangSC-Light",
+    // fontFamily: "PingFangSC-Light",
     fontSize: px2dp(26),
     lineHeight: px2dp(36),
     color: '#464646',

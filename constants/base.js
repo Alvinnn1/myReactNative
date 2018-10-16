@@ -1,6 +1,6 @@
 const formData = {
-  checkInDate: '2018-10-19',
-  checkOutDate: '2018-10-21',
+  checkInDate: '2018-11-19',
+  checkOutDate: '2018-11-21',
   room:1,
   adult:2,
   child:0,

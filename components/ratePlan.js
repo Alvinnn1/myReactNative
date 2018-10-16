@@ -1,17 +1,47 @@
 import React from 'react';
 import baseConstans from './../constants/base'
+import rateplanGroup from './../components/rateplan-group'
 import { getRatePlan } from "./services/api";
 
 export default class RatePlan extends React.Component{
   constructor(props){
     super(props)
+    this.state = {
+      agodaItem: [],
+      ctripItem: [],
+      igolaItem: [],
+      agodaGroupItem: [],
+      ctripGroupItem: [],
+      igolaGroupItem: [],
+      agodaItemGroupLimit: 2,
+      ctripItemGroupLimit: 5,
+      igolaItemGroupLimit: 5,
+    }
   }
   componentDidMount() {
     this.getHotelRatePlan()
   }
   render() {
     return (
-      <View></View>
+      <View>
+        {
+          this.state.agodaItem.length > 0 ?
+            <View>
+              <Image source={require('./../images/agoda-logo-v2.png')}/>
+              {
+                this.state.agodaItem.forEach((item, index) => {
+                  index < this.state.agodaItemGroupLimit ?
+                    <View>
+                      <RateplanGroup item={this.adaptAgodaGroup(item)}></RateplanGroup>
+                      <RateplanCell item={item}></RateplanCell>
+                    </View>
+                    : null
+                })
+              }
+            </View>
+            : null
+        }
+      </View>
     )
   }
   getHotelRatePlan() {
@@ -34,11 +64,24 @@ export default class RatePlan extends React.Component{
       } else if (res.data.rooms === null){
         console.log('rooms sold out')
       } else {
+        this.setState({
+          igolaGroupItem: res.data.roomsGroup
+        })
         this.separateRateplan(res.data.rooms)
-
       }
 
     })
+  }
+  adaptAgodaGroup(item) {
+    const res = {
+      roomName : item.rateName,
+      nightlyRate: item.nightlyRate,
+      rowNightlyRate: item.rowNightlyRate,
+      maxOccupancy: item.maxOccupancy,
+      bedType: item.bedType,
+      roomInfo: item.roomInfo
+    }
+    return res
   }
   separateRateplan(obj) {
     let tempList = []
@@ -77,7 +120,9 @@ export default class RatePlan extends React.Component{
       // tempList = this.quickSort(tempList, 'lowestPrice')
       tempList = tempList.filter((item) => item.name !== '其他')
       if (otherItem.name) tempList.push(otherItem)
-      this.igolaItem = tempList
+      this.setState({
+        igolaItem: igolaItem
+      })
     }
   }
   adaptAgodaData(arr) {
@@ -101,7 +146,9 @@ export default class RatePlan extends React.Component{
         }
         agodaItem.push(tempItem)
       })
-      this.agodaItem = agodaItem
+      this.setState({
+        agodaItem: agodaItem
+      })
     }
   }
   // expect to be a Object
@@ -126,6 +173,9 @@ export default class RatePlan extends React.Component{
         }
         ctripItem.push(newItem)
       }
+      this.setState({
+        ctripItem: ctripItem
+      })
       // this.ctripItem = this.quickSort(ctripItem, 'lowestPrice')
     }
   }
