@@ -14,9 +14,8 @@ import {
   Text,
   View
 } from 'react-native';
-import Iconfont from "./assets/Fonts/Iconfont";
-import Icon from 'react-native-vector-icons/FontAwesome';
-// const myIcon = (<Icon name="rocket" size={30} color="#900" />)
+// import Iconfont from "./assets/Fonts/Iconfont";
+import Iconfont from "./components/iconfont";
 import { getHotelDetail } from "./services/api";
 
 
@@ -59,9 +58,9 @@ export default class App extends React.Component {
           ?
           <View style={styles.imgBox}>
             <Image source={{uri:this.state.imageList[0].src}} style={{height:px2dp(340),flex:1}}/>
-            <Text style={{fontSize: 20,color:'black',fontFamily: 'Iconfont'}}>kaiguanguan:{Iconfont('kaiguanguan')}</Text>
-            {/*<Iconfont name={'map'}/>*/}
-            {/*<Iconfont name='attention'/>*/}
+            {/*<Text style={{fontSize: 20,color:'black',fontFamily: 'Iconfont'}}>kaiguanguan:{Iconfont('kaiguanguan')}</Text>*/}
+            <Iconfont name={'map'}/>
+            <Iconfont name='attention'/>
             {/*<Text style={{fontSize: 20,color:'black',fontFamily: 'FontAwesome'}}>61525</Text>*/}
             {/*<Text style={{fontSize: 20,color:'black',fontFamily: 'iconfont'}}>'&#xe705'</Text>*/}
             {/*<Icon name='glass'/>*/}
