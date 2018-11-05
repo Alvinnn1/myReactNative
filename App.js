@@ -14,6 +14,7 @@ import {
   Text,
   View
 } from 'react-native';
+import RatePlan from './components/ratePlan'
 // import Iconfont from "./assets/Fonts/Iconfont";
 import Iconfont from "./components/iconfont";
 import { getHotelDetail } from "./services/api";
@@ -95,7 +96,7 @@ export default class App extends React.Component {
           }
         </View>
         <View style={styles.ratePlanBox}>
-
+          <RatePlan></RatePlan>
         </View>
 
       </ScrollView>

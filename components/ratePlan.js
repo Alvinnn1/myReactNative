@@ -2,6 +2,7 @@ import React from 'react';
 import baseConstans from './../constants/base'
 import rateplanGroup from './../components/rateplan-group'
 import { getRatePlan } from "./services/api";
+import { isNotEmptyObject, quickSort } from "../tools/tools";
 
 export default class RatePlan extends React.Component{
   constructor(props){
@@ -25,22 +26,23 @@ export default class RatePlan extends React.Component{
     return (
       <View>
         {
-          this.state.agodaItem.length > 0 ?
+          this.state.ratePlanList.forEach((rateItem, rateIndex) => {
             <View>
-              <Image source={require('./../images/agoda-logo-v2.png')}/>
+              <Image source={require('./../images/'+ rateItem.otaType +'-logo-v2.png')}/>
               {
-                this.state.agodaItem.forEach((item, index) => {
-                  index < this.state.agodaItemGroupLimit ?
+                rateItem.rooms.forEach((roomItem, roomIndex) => {
+                  roomIndex < this.state.groupLimit[rateItem.otaType] ?
                     <View>
-                      <RateplanGroup item={this.adaptAgodaGroup(item)}></RateplanGroup>
-                      <RateplanCell item={item}></RateplanCell>
+                      <RateplanGroup item={this.adaptGroupData(roomItem)}></RateplanGroup>
+                      <RateplanCell item={roomItem}></RateplanCell>
                     </View>
                     : null
                 })
               }
             </View>
-            : null
+          })
         }
+
       </View>
     )
   }
@@ -64,15 +66,12 @@ export default class RatePlan extends React.Component{
       } else if (res.data.rooms === null){
         console.log('rooms sold out')
       } else {
-        this.setState({
-          igolaGroupItem: res.data.roomsGroup
-        })
-        this.separateRateplan(res.data.rooms)
+        this.separateRateplan(res.data.rateplans)
       }
 
     })
   }
-  adaptAgodaGroup(item) {
+  adaptGroupData(item) {
     const res = {
       roomName : item.rateName,
       nightlyRate: item.nightlyRate,
@@ -84,99 +83,50 @@ export default class RatePlan extends React.Component{
     return res
   }
   separateRateplan(obj) {
-    let tempList = []
-    let otherItem = {}
-    let agodaItem = []
-    let ctripItem = {}
-    for (let key in obj) {
-      if (key === 'agoda') {
-        agodaItem = obj['agoda']
-      } else if (key === 'ctrip') {
-        ctripItem = obj['ctrip']
-      } else {
-        const newItem = {
-          name: key,
-          list: obj[key],
-          currentIndex: 0,
-          lowestPrice: obj[key][0].totalAmount
-        }
-        if (key === '其他') otherItem = newItem
-        for (let i = 0; i < this.igolaItem.length; i++) {
-          if (newItem.name === this.igolaItem[i].name) {
-            newItem.currentIndex = this.igolaItem[i].currentIndex
-            break
-          }
-        }
-        tempList.push(newItem)
-      }
-    }
-    this.adaptAgodaData(agodaItem)
-    this.adaptCtripData(ctripItem)
-
-    // adapt igola
-    if (tempList.length === 0) {
-      this.igolaItem = []
-    } else {
-      // tempList = this.quickSort(tempList, 'lowestPrice')
-      tempList = tempList.filter((item) => item.name !== '其他')
-      if (otherItem.name) tempList.push(otherItem)
-      this.setState({
-        igolaItem: igolaItem
-      })
-    }
+    this.state.ratePlanList= []
+    this.state.ratePlanList.push(
+      this.adaptRateplanSource('agoda', obj.agoda, 2),
+      this.adaptRateplanSource('ctrip', obj.ctrip, 2),
+      this.adaptRateplanSource('igola', obj.igola, 2))
   }
-  adaptAgodaData(arr) {
-    if (arr.length === 0) {
-      this.agodaItem = []
-    } else {
-      const agodaItem = []
-      arr.forEach(item => {
-        const tempItem = {
-          name: item.rateName,
-          code: item.rateCode,
-          list: [item],
-          currentIndex: 0,
-          lowestPrice: arr[0].totalAmount
-        }
-        for (let i = 0; i < this.agodaItem.length; i++) {
-          if (tempItem.code === this.agodaItem[i].code) {
-            tempItem.currentIndex = this.agodaItem[i].currentIndex
-            break
-          }
-        }
-        agodaItem.push(tempItem)
-      })
-      this.setState({
-        agodaItem: agodaItem
-      })
-    }
-  }
-  // expect to be a Object
-  adaptCtripData(obj) {
-    if (!obj.roomsGroup) {
-      this.ctripItem = []
-    } else {
-      this.ctripRoomGroup = obj.roomsGroup
-      const ctripItem = []
-      for (let key in obj.rooms) {
+  adaptRateplanSource(otaType, obj, groupLimit) {
+    let totalList = []
+    if(isNotEmptyObject(obj.rooms)) {
+      let mainList = [], otherItem = [], soldOutItem = [], lastItem = []
+      for(let key in obj.rooms) {
         const newItem = {
           name: key,
           list: obj.rooms[key],
           currentIndex: 0,
           lowestPrice: obj.rooms[key][0].totalAmount
         }
-        for (let i = 0; i < this.ctripItem.length; i++) {
-          if (newItem.name === this.ctripItem[i].name) {
-            newItem.currentIndex = this.ctripItem[i].currentIndex
+        const otaItem = `${otaType}Item`
+        for (let i = 0; i < this[otaItem].length; i++) {
+          if (newItem.name === this[otaItem][i].name) {
+            newItem.currentIndex = this[otaItem][i].currentIndex
             break
           }
         }
-        ctripItem.push(newItem)
+        if (obj.groups[key].soldOut) {
+          if (obj.groups[key].nightlyRate !== 0) {
+            soldOutItem.push(newItem)
+          } else {
+            newItem.currentIndex = 0
+            lastItem.push(newItem)
+          }
+        } else {
+          if (key === '其他') {
+            otherItem.push(newItem)
+          } else {
+            mainList.push(newItem)
+          }
+        }
       }
-      this.setState({
-        ctripItem: ctripItem
-      })
-      // this.ctripItem = this.quickSort(ctripItem, 'lowestPrice')
+      mainList = quickSort(mainList, 'lowestPrice')
+      if (soldOutItem.length !== 0) soldOutItem = this.quickSort(soldOutItem, 'lowestPrice')
+      totalList = mainList.concat(otherItem, soldOutItem, lastItem)
+      this[otaType + 'Item'] = totalList
     }
+    return totalList.length > 0 ? { otaType: otaType, groups: obj.groups, rooms: totalList, groupLimit: groupLimit } : null
   }
 }

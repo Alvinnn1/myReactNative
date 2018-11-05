@@ -14,7 +14,6 @@ export default class RatePlan extends React.Component{
         <Image source={this.props.item.image} style={{width:px2dp(200),width:px2dp(200)}}></Image>
       </View>
       <View>
-        <Iconfont name={}/>
 
       </View>
     </View>
