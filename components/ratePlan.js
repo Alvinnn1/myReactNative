@@ -1,11 +1,13 @@
 import React from 'react';
 import {
   Text,
-  View
+  View,
+  Image
 } from 'react-native';
 import baseConstans from './../constants/base'
 import rateplanGroup from './../components/rateplan-group'
 import { getRatePlan } from "./../services/api";
+import px2dp from './../tools/px2dp'
 import { isNotEmptyObject, quickSort } from "../tools/tools";
 
 export default class RatePlan extends React.Component{
@@ -15,6 +17,16 @@ export default class RatePlan extends React.Component{
       agodaItem: [],
       ctripItem: [],
       igolaItem: [],
+      groupLimit: {
+        agoda: 2,
+        igola: 2,
+        ctrip: 2
+      },
+      supplierLogoPath: {
+        agoda: require('./../images/agoda-logo-v2.png'),
+        igola: require('./../images/igola-logo-v2.png'),
+        ctrip: require('./../images/ctrip-logo-v2.png'),
+      },
       agodaGroupItem: [],
       ctripGroupItem: [],
       igolaGroupItem: [],
@@ -30,21 +42,15 @@ export default class RatePlan extends React.Component{
   render() {
     return (
       <View>
+        <Text>rate</Text>
         {
-          this.state.ratePlanList.forEach((rateItem, rateIndex) => {
-            <View>
-              <Image source={require('./../images/ctrip-logo-v2.png')}/>
-              {
-                rateItem.rooms.forEach((roomItem, roomIndex) => {
-                  roomIndex < this.state.groupLimit[rateItem.otaType] ?
-                    <View>
-                      <RateplanGroup item={this.adaptGroupData(roomItem)}></RateplanGroup>
-                      <RateplanCell item={roomItem}></RateplanCell>
-                    </View>
-                    : null
-                })
-              }
-            </View>
+          this.state.ratePlanList.map((rateItem, rateIndex) => {
+           return (
+             <View>
+               <Image source={this.state.supplierLogoPath[rateItem.otaType]} style={{height:px2dp(160),flex:1,marginRight:px2dp(5)}}></Image>
+               <Text>hello world</Text>
+             </View>
+           )
           })
         }
 
@@ -54,7 +60,7 @@ export default class RatePlan extends React.Component{
   getHotelRatePlan() {
     const req = {
       newVersion: true,
-      hotelId: 404601,
+      hotelId: 247820,
       checkInDate: baseConstans.formData.checkInDate,
       checkOutDate: baseConstans.formData.checkOutDate,
       adult: baseConstans.formData.adult,
@@ -88,11 +94,15 @@ export default class RatePlan extends React.Component{
     return res
   }
   separateRateplan(obj) {
-    this.state.ratePlanList= []
-    this.state.ratePlanList.push(
+    let arr = []
+    arr.push(
       this.adaptRateplanSource('agoda', obj.agoda, 2),
       this.adaptRateplanSource('ctrip', obj.ctrip, 2),
       this.adaptRateplanSource('igola', obj.igola, 2))
+    this.setState({
+      ratePlanList: arr
+    })
+    console.log(this.state.ratePlanList)
   }
   adaptRateplanSource(otaType, obj, groupLimit) {
     let totalList = []
@@ -106,9 +116,9 @@ export default class RatePlan extends React.Component{
           lowestPrice: obj.rooms[key][0].totalAmount
         }
         const otaItem = `${otaType}Item`
-        for (let i = 0; i < this[otaItem].length; i++) {
-          if (newItem.name === this[otaItem][i].name) {
-            newItem.currentIndex = this[otaItem][i].currentIndex
+        for (let i = 0; i < this.state[otaItem].length; i++) {
+          if (newItem.name === this.state[otaItem][i].name) {
+            newItem.currentIndex = this.state[otaItem][i].currentIndex
             break
           }
         }
@@ -128,7 +138,7 @@ export default class RatePlan extends React.Component{
         }
       }
       mainList = quickSort(mainList, 'lowestPrice')
-      if (soldOutItem.length !== 0) soldOutItem = this.quickSort(soldOutItem, 'lowestPrice')
+      if (soldOutItem.length !== 0) soldOutItem = quickSort(soldOutItem, 'lowestPrice')
       totalList = mainList.concat(otherItem, soldOutItem, lastItem)
       this[otaType + 'Item'] = totalList
     }

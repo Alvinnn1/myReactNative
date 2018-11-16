@@ -19,5 +19,5 @@ export function quickSort(arr, sortParam) {
       right.push(arr[i])
     }
   }
-  return quickSort(left, sortParam).concat([pivot], this.quickSort(right, sortParam))
+  return quickSort(left, sortParam).concat([pivot], quickSort(right, sortParam))
 }

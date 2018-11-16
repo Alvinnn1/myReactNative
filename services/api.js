@@ -3,7 +3,7 @@ const apiUrl = 'http://sitgateway.igola.com'
 export function getHotelDetail(hotelId, callback) {
     const url = `${apiUrl}/api-hotel/detail?hotelId=${hotelId}`
     const option = {
-        methods: 'GET',
+        method: 'GET',
         headers: {
             "Content-Type": "application/json"
         }
@@ -17,10 +17,10 @@ export function getHotelDetail(hotelId, callback) {
 }
 
 export function getRatePlan(req, callback) {
-  const url = `${apiUrl}/api-hotel/ratePlan`
+  const url = `${apiUrl}/api-hotel-polling-datahub/api/ratePlan`
   const option = {
-    methods: 'POST',
-    body: req,
+    method: 'POST',
+    body: JSON.stringify(req),
     headers: {
       "Content-Type": "application/json"
     }

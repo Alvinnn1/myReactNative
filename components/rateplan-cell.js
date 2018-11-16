@@ -8,15 +8,15 @@ export default class RatePlan extends React.Component{
     super()
   }
   render(){
-    return {
-    <View style={{flexDirection:'row'}}>
-      <View>
-        <Image source={this.props.item.image} style={{width:px2dp(200),width:px2dp(200)}}></Image>
-      </View>
-      <View>
+    return (
+      <View style={{flexDirection:'row'}}>
+        <View>
+          <Image source={this.props.item.image} style={{width:px2dp(200),width:px2dp(200)}}></Image>
+        </View>
+        <View>
 
+        </View>
       </View>
-    </View>
-  }
+    )
   }
 }

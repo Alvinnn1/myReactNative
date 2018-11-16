@@ -37,7 +37,7 @@ export default class App extends React.Component {
     }
   }
   getHotelDetailData() {
-    getHotelDetail(404601, res => {
+    getHotelDetail(247820, res => {
       console.log(res)
       if (res.code !== 200) return
       const tempList = []
