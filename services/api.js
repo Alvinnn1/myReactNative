@@ -17,7 +17,7 @@ export function getHotelDetail(hotelId, callback) {
 }
 
 export function getRatePlan(req, callback) {
-  const url = `${apiUrl}/api-hotel/rateplan`
+  const url = `${apiUrl}/api-hotel/ratePlan`
   const option = {
     methods: 'POST',
     body: req,

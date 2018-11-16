@@ -1,12 +1,18 @@
 import React from 'react';
+import {
+  Text,
+  View
+} from 'react-native';
 
 export default class RatePlan extends React.Component{
-  constructor(){
-    super()
+  constructor(props) {
+    super(props)
   }
-  render(){
-    return {
-      <View></View>
-    }
+  render() {
+    return (
+      <View>
+        <Text>test</Text>
+      </View>
+    )
   }
 }

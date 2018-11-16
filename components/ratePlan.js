@@ -1,7 +1,11 @@
 import React from 'react';
+import {
+  Text,
+  View
+} from 'react-native';
 import baseConstans from './../constants/base'
 import rateplanGroup from './../components/rateplan-group'
-import { getRatePlan } from "./services/api";
+import { getRatePlan } from "./../services/api";
 import { isNotEmptyObject, quickSort } from "../tools/tools";
 
 export default class RatePlan extends React.Component{
@@ -17,6 +21,7 @@ export default class RatePlan extends React.Component{
       agodaItemGroupLimit: 2,
       ctripItemGroupLimit: 5,
       igolaItemGroupLimit: 5,
+      ratePlanList: []
     }
   }
   componentDidMount() {
@@ -28,7 +33,7 @@ export default class RatePlan extends React.Component{
         {
           this.state.ratePlanList.forEach((rateItem, rateIndex) => {
             <View>
-              <Image source={require('./../images/'+ rateItem.otaType +'-logo-v2.png')}/>
+              <Image source={require('./../images/ctrip-logo-v2.png')}/>
               {
                 rateItem.rooms.forEach((roomItem, roomIndex) => {
                   roomIndex < this.state.groupLimit[rateItem.otaType] ?
